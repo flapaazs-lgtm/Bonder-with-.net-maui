@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.GenreSelectionPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Choose Genres"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0"
+          Padding="20">
+
+        <!-- Top Section: Progress Indicator -->
+        <VerticalStackLayout Grid.Row="0"
+                             Spacing="16"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Start"
+                             Margin="0,20,0,0">
+
+            <!-- Progress Dots -->
+            <HorizontalStackLayout Spacing="8"
+                                   HorizontalOptions="Center">
+                <BoxView Color="{DynamicResource PrimaryAccent}"
+                         HeightRequest="8"
+                         WidthRequest="8"
+                         CornerRadius="4" />
+                <BoxView Color="{DynamicResource PrimaryAccent}"
+                         HeightRequest="8"
+                         WidthRequest="8"
+                         CornerRadius="4" />
+                <BoxView Color="{DynamicResource TextLight}"
+                         HeightRequest="8"
+                         WidthRequest="8"
+                         CornerRadius="4" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Middle Section: Genre Selection -->
+        <VerticalStackLayout Grid.Row="1"
+                             Spacing="24"
+                             VerticalOptions="Center">
+
+            <!-- Heading -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Choose Your Favorite Genres"
+                       FontSize="24"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="{DynamicResource TextPrimary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <Label Text="Select 3 or more genres to help us find books you'll love."
+                       FontSize="16"
+                       TextColor="{DynamicResource TextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <!-- Genre Grid using CollectionView -->
+            <CollectionView ItemsSource="{Binding AllGenres}"
+                            SelectionMode="None"
+                            HorizontalOptions="Center">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="3"
+                                     HorizontalItemSpacing="8"
+                                     VerticalItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding DisplayName}"
+                                Margin="0"
+                                Padding="16,12"
+                                CornerRadius="20"
+                                BackgroundColor="{Binding IsSelected, Converter={StaticResource GenreSelectionConverter}}"
+                                TextColor="{Binding IsSelected, Converter={StaticResource GenreTextColorConverter}}"
+                                BorderColor="{DynamicResource PrimaryAccent}"
+                                BorderWidth="1"
+                                Command="{Binding ToggleGenreCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+
+        <!-- Bottom Section: Continue Button -->
+        <VerticalStackLayout Grid.Row="2"
+                             Spacing="12"
+                             VerticalOptions="End"
+                             Padding="0,0,0,20">
+
+            <Button Text="Continue"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding ContinueCommand}"
+                    IsEnabled="{Binding CanContinue}" />
+
+            <Label Text="Skip for now"
+                   FontSize="14"
+                   TextColor="{DynamicResource TextLight}"
+                   HorizontalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SkipCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>

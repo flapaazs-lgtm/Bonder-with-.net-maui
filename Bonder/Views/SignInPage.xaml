@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.SignInPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Sign In"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*,Auto"
+              RowSpacing="0"
+              Padding="20">
+
+            <!-- Top Section: Logo and Tagline -->
+            <VerticalStackLayout Grid.Row="0"
+                                 Spacing="12"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Start"
+                                 Margin="0,40,0,0">
+
+                <!-- Logo -->
+                <Label Text="📚"
+                       FontSize="48"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Bonder"
+                       FontSize="32"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="{DynamicResource PrimaryAccent}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Discover your next great read."
+                       FontSize="16"
+                       TextColor="{DynamicResource TextSecondary}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- Middle Section: Hero Image and Main Content -->
+            <VerticalStackLayout Grid.Row="1"
+                                 Spacing="32"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Fill"
+                                 Padding="0,40">
+
+                <!-- Hero Image -->
+                <Frame BackgroundColor="{DynamicResource SecondaryBackground}"
+                       BorderColor="{DynamicResource PrimaryAccent}"
+                       CornerRadius="20"
+                       Padding="40,30"
+                       HorizontalOptions="Center"
+                       HasShadow="True">
+                    <Label Text="📖☕"
+                           FontSize="64"
+                           HorizontalOptions="Center" />
+                </Frame>
+
+                <!-- Main Heading -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Discover your next great read"
+                           FontSize="28"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label Text="Swipe through a world of books tailored just for you. Let's get started."
+                           FontSize="16"
+                           TextColor="{DynamicResource TextSecondary}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <!-- Email Sign In Form (Initially Hidden) -->
+                <VerticalStackLayout x:Name="EmailForm"
+                                     Spacing="16"
+                                     IsVisible="False">
+
+                    <Entry Placeholder="Email"
+                           Text="{Binding Email}"
+                           Keyboard="Email" />
+
+                    <Entry Placeholder="Password"
+                           Text="{Binding Password}"
+                           IsPassword="True" />
+
+                    <Button Text="Sign In"
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding SignInWithEmailCommand}" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Bottom Section: Sign In Options -->
+            <VerticalStackLayout Grid.Row="2"
+                                 Spacing="16"
+                                 VerticalOptions="End"
+                                 Padding="0,0,0,20">
+
+                <!-- Social Sign In Buttons -->
+                <Button Text="Continue with Google"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding SignInWithGoogleCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="🔍"
+                                         FontFamily="OpenSansRegular"
+                                         Color="{DynamicResource TextPrimary}" />
+                    </Button.ImageSource>
+                </Button>
+
+                <Button Text="Continue with Apple"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding SignInWithAppleCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="🍎"
+                                         FontFamily="OpenSansRegular"
+                                         Color="{DynamicResource TextPrimary}" />
+                    </Button.ImageSource>
+                </Button>
+
+                <!-- Email Sign In Button -->
+                <Button Text="Continue with Email"
+                        Style="{StaticResource PrimaryButton}"
+                        Clicked="OnEmailButtonClicked" />
+
+                <!-- Legal Text -->
+                <Label Text="By continuing, you agree to our Terms of Service and Privacy Policy."
+                       FontSize="12"
+                       TextColor="{DynamicResource TextLight}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <!-- Sign In Link -->
+                <Label Text="Already have an account? Sign in"
+                       FontSize="14"
+                       TextColor="{DynamicResource PrimaryAccent}"
+                       HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSignInTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </VerticalStackLayout>
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

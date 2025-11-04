@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Bonder.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Bonder.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
+
+    <ShellContent
+        Title="SignIn"
+        ContentTemplate="{DataTemplate views:SignInPage}"
+        Route="SignIn" />
+
+    <ShellContent
+        Title="GenreSelection"
+        ContentTemplate="{DataTemplate views:GenreSelectionPage}"
+        Route="GenreSelection" />
+
+    <ShellContent
+        Title="MainPage"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
+
+</Shell>
