@@ -1,0 +1,272 @@
+<?x<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.StatisticsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Your Reading Stats"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24"
+                             Padding="20">
+
+            <!-- Year Overview Card -->
+            <Frame Padding="24"
+                   BackgroundColor="{DynamicResource White}"
+                   CornerRadius="20">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                      RowSpacing="16">
+                    <Label Grid.Row="0"
+                           Text="{Binding CurrentYear}"
+                           FontSize="32"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource PrimaryAccent}"
+                           HorizontalOptions="Center" />
+
+                    <Label Grid.Row="1"
+                           Text="{Binding Statistics.BooksFinishedThisYear, StringFormat='{0} books read'}"
+                           FontSize="20"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}"
+                           HorizontalOptions="Center" />
+
+                    <!-- Yearly Goal Progress -->
+                    <VerticalStackLayout Grid.Row="2"
+                                         Spacing="8"
+                                         IsVisible="{Binding HasYearlyGoal}">
+                        <ProgressBar Progress="{Binding YearlyGoal.Progress}"
+                                     ProgressColor="{DynamicResource Success}"
+                                     BackgroundColor="{DynamicResource SecondaryBackground}"
+                                     HeightRequest="12"/>
+                        <Label Text="{Binding YearlyGoalText}"
+                               FontSize="14"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Row="3"
+                            Text="Set Reading Goal"
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding SetGoalCommand}"
+                            IsVisible="{Binding HasYearlyGoal, Converter={StaticResource InverseBoolConverter}}" />
+                </Grid>
+            </Frame>
+
+            <!-- Stats Grid -->
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="Auto,Auto"
+                  ColumnSpacing="12"
+                  RowSpacing="12">
+
+                <!-- Reading Streak -->
+                <Frame Grid.Column="0"
+                       Grid.Row="0"
+                       Padding="16"
+                       BackgroundColor="{DynamicResource White}"
+                       CornerRadius="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🔥"
+                               FontSize="32"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding Statistics.CurrentStreak}"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource PrimaryAccent}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Day Streak"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Pages Read -->
+                <Frame Grid.Column="1"
+                       Grid.Row="0"
+                       Padding="16"
+                       BackgroundColor="{DynamicResource White}"
+                       CornerRadius="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="📄"
+                               FontSize="32"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding Statistics.TotalPagesRead, StringFormat='{0:N0}'}"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource Success}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Pages Read"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Average Rating -->
+                <Frame Grid.Column="0"
+                       Grid.Row="1"
+                       Padding="16"
+                       BackgroundColor="{DynamicResource White}"
+                       CornerRadius="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="⭐"
+                               FontSize="32"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding Statistics.AverageRating, StringFormat='{0:F1}'}"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource PrimaryAccent}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Avg Rating"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Total Books -->
+                <Frame Grid.Column="1"
+                       Grid.Row="1"
+                       Padding="16"
+                       BackgroundColor="{DynamicResource White}"
+                       CornerRadius="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="📚"
+                               FontSize="32"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding Statistics.BooksFinished}"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource Success}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Total Read"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Reading Challenges -->
+            <VerticalStackLayout Spacing="16"
+                                 IsVisible="{Binding HasChallenges}">
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Active Challenges"
+                           FontSize="20"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}"
+                           VerticalOptions="Center" />
+                    <Label Text="{Binding ActiveChallenges.Count, StringFormat='({0})'}"
+                           FontSize="16"
+                           TextColor="{DynamicResource TextSecondary}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <CollectionView ItemsSource="{Binding ActiveChallenges}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="16"
+                                   BackgroundColor="{DynamicResource White}"
+                                   CornerRadius="16"
+                                   Margin="0,0,0,12">
+                                <Grid RowDefinitions="Auto,Auto,Auto"
+                                      RowSpacing="12">
+                                    <HorizontalStackLayout Grid.Row="0"
+                                                           Spacing="12">
+                                        <Label Text="{Binding IconEmoji}"
+                                               FontSize="32"
+                                               VerticalOptions="Center" />
+                                        <VerticalStackLayout Spacing="4"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="16"
+                                                   FontFamily="OpenSansSemibold"
+                                                   TextColor="{DynamicResource TextPrimary}" />
+                                            <Label Text="{Binding Description}"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource TextSecondary}"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="2" />
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+
+                                    <ProgressBar Grid.Row="1"
+                                                 Progress="{Binding ProgressPercentage}"
+                                                 ProgressColor="{DynamicResource Success}"
+                                                 BackgroundColor="{DynamicResource SecondaryBackground}"
+                                                 HeightRequest="8"/>
+
+                                    <HorizontalStackLayout Grid.Row="2"
+                                                           Spacing="8"
+                                                           HorizontalOptions="Start">
+                                        <Label Text="{Binding CurrentProgress}"
+                                               FontSize="14"
+                                               FontFamily="OpenSansSemibold"
+                                               TextColor="{DynamicResource PrimaryAccent}" />
+                                        <Label Text="/"
+                                               FontSize="14"
+                                               TextColor="{DynamicResource TextSecondary}" />
+                                        <Label Text="{Binding TargetCount}"
+                                               FontSize="14"
+                                               TextColor="{DynamicResource TextSecondary}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Button Text="+ Create New Challenge"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding CreateChallengeCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Favorite Genres -->
+            <VerticalStackLayout Spacing="16">
+                <Label Text="Favorite Genres"
+                       FontSize="20"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="{DynamicResource TextPrimary}" />
+
+                <FlexLayout Wrap="Wrap"
+                            JustifyContent="Start"
+                            BindableLayout.ItemsSource="{Binding Statistics.FavoriteGenres}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="{DynamicResource PrimaryAccent}"
+                                   CornerRadius="16"
+                                   Padding="16,8"
+                                   Margin="0,0,8,8"
+                                   HasShadow="False">
+                                <Label Text="{Binding .}"
+                                       FontSize="14"
+                                       TextColor="{DynamicResource White}"
+                                       FontFamily="OpenSansSemibold" />
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+
+            <!-- Monthly Reading Chart Placeholder -->
+            <Frame Padding="20"
+                   BackgroundColor="{DynamicResource White}"
+                   CornerRadius="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Reading Activity"
+                           FontSize="20"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <Label Text="📊 Chart visualization coming soon!"
+                           FontSize="14"
+                           TextColor="{DynamicResource TextSecondary}"
+                           HorizontalOptions="Center"
+                           Margin="0,20,0,20" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

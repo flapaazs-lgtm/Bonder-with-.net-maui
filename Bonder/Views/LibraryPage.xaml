@@ -5,73 +5,181 @@
              Title="My Library"
              BackgroundColor="{DynamicResource PrimaryBackground}">
 
-    <Grid RowDefinitions="Auto,*,Auto"
-          RowSpacing="0">
-
-        <!-- Header -->
-        <Grid Grid.Row="0"
-              Padding="20,10"
-              ColumnDefinitions="*,Auto"
-              BackgroundColor="{DynamicResource White}">
-            <Label Text="My Library"
-                   FontSize="24"
-                   FontFamily="OpenSansSemibold"
-                   TextColor="{DynamicResource TextPrimary}"
-                   VerticalOptions="Center" />
-
-            <Button Grid.Column="1"
-                    Text="⚙️"
-                    FontSize="20"
-                    BackgroundColor="Transparent"
-                    Command="{Binding SortCommand}" />
-        </Grid>
-
-        <!-- Content -->
-        <ScrollView Grid.Row="1">
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding RefreshCommand}"
+                 RefreshColor="{DynamicResource PrimaryAccent}">
+        <ScrollView>
             <VerticalStackLayout Spacing="24"
                                  Padding="20">
 
-                <!-- Currently Reading Section -->
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="Currently Reading"
-                           FontSize="20"
-                           FontFamily="OpenSansSemibold"
-                           TextColor="{DynamicResource TextPrimary}" />
+                <Grid ColumnDefinitions="*,*,*"
+                      ColumnSpacing="12">
+                    <Frame Grid.Column="0"
+                           Padding="12"
+                           BackgroundColor="{DynamicResource White}"
+                           CornerRadius="16">
+                        <VerticalStackLayout Spacing="4"
+                                             HorizontalOptions="Center">
+                            <Label Text="{Binding Statistics.BooksCurrentlyReading}"
+                                   FontSize="24"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource PrimaryAccent}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Reading"
+                                   FontSize="11"
+                                   TextColor="{DynamicResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame Grid.Column="1"
+                           Padding="12"
+                           BackgroundColor="{DynamicResource White}"
+                           CornerRadius="16">
+                        <VerticalStackLayout Spacing="4"
+                                             HorizontalOptions="Center">
+                            <Label Text="{Binding Statistics.BooksFinished}"
+                                   FontSize="24"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource Success}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Finished"
+                                   FontSize="11"
+                                   TextColor="{DynamicResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame Grid.Column="2"
+                           Padding="12"
+                           BackgroundColor="{DynamicResource White}"
+                           CornerRadius="16">
+                        <VerticalStackLayout Spacing="4"
+                                             HorizontalOptions="Center">
+                            <Label Text="{Binding Statistics.BooksLiked}"
+                                   FontSize="24"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource PrimaryAccent}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Liked"
+                                   FontSize="11"
+                                   TextColor="{DynamicResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <Frame IsVisible="{Binding HasActiveChallenge}"
+                       Padding="20"
+                       BackgroundColor="{DynamicResource PrimaryAccent}"
+                       CornerRadius="20">
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          RowSpacing="12">
+                        <HorizontalStackLayout Grid.Row="0"
+                                               Spacing="8">
+                            <Label Text="{Binding ActiveChallenge.IconEmoji}"
+                                   FontSize="24" />
+                            <Label Text="{Binding ActiveChallenge.Name}"
+                                   FontSize="18"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource White}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <ProgressBar Grid.Row="1"
+                                     Progress="{Binding ActiveChallenge.ProgressPercentage}"
+                                     ProgressColor="{DynamicResource White}"
+                                     BackgroundColor="#FFFFFF33"
+                                     HeightRequest="8" />
+
+                        <Label Grid.Row="2"
+                               Text="{Binding ChallengeProgressText}"
+                               FontSize="14"
+                               TextColor="{DynamicResource White}"
+                               Opacity="0.9" />
+                    </Grid>
+                </Frame>
+
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="8"
+                                           Padding="0,0,0,8">
+                        <Label Text="Currently Reading"
+                               FontSize="20"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource TextPrimary}"
+                               VerticalOptions="Center" />
+                        <Label Text="{Binding CurrentlyReading.Count, StringFormat='({0})'}"
+                               FontSize="16"
+                               TextColor="{DynamicResource TextSecondary}"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
 
                     <CollectionView ItemsSource="{Binding CurrentlyReading}"
                                     SelectionMode="None"
-                                    HeightRequest="220">
+                                    HeightRequest="280">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Horizontal"
                                                ItemSpacing="16" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <VerticalStackLayout Spacing="8"
-                                                     WidthRequest="140">
+                                <VerticalStackLayout Spacing="12"
+                                                     WidthRequest="160">
                                     <Frame Padding="0"
-                                           CornerRadius="12"
+                                           CornerRadius="16"
                                            HasShadow="True"
-                                           HeightRequest="180"
-                                           WidthRequest="140">
-                                        <Image Source="{Binding CoverUrl}"
-                                               Aspect="AspectFill">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewBookCommand}"
-                                                                      CommandParameter="{Binding .}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
+                                           HeightRequest="200"
+                                           WidthRequest="160">
+                                        <Grid>
+                                            <Image Source="{Binding CoverUrl}"
+                                                   Aspect="AspectFill">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewBookCommand}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Image.GestureRecognizers>
+                                            </Image>
+
+                                            <VerticalStackLayout VerticalOptions="End"
+                                                                 Padding="12"
+                                                                 Spacing="8">
+                                                <ProgressBar Progress="{Binding ReadProgress}"
+                                                             ProgressColor="{DynamicResource PrimaryAccent}"
+                                                             BackgroundColor="#FFFFFF66"
+                                                             HeightRequest="6" />
+                                                <Label Text="{Binding ReadProgress, StringFormat='{0:P0}'}"
+                                                       FontSize="12"
+                                                       TextColor="{DynamicResource White}"
+                                                       FontFamily="OpenSansSemibold"
+                                                       HorizontalOptions="End"
+                                                       BackgroundColor="#00000088"
+                                                       Padding="8,4"
+                                                       Margin="0,0,0,0">
+                                                    <Label.Shadow>
+                                                        <Shadow Brush="Black"
+                                                                Opacity="0.3"
+                                                                Radius="4"
+                                                                Offset="0,2" />
+                                                    </Label.Shadow>
+                                                </Label>
+                                            </VerticalStackLayout>
+                                        </Grid>
                                     </Frame>
 
-                                    <!-- Progress Bar -->
-                                    <ProgressBar Progress="{Binding ReadProgress}"
-                                                 ProgressColor="{DynamicResource PrimaryAccent}"
-                                                 BackgroundColor="{DynamicResource SecondaryBackground}" />
+                                    <Label Text="{Binding Title}"
+                                           FontSize="13"
+                                           FontFamily="OpenSansSemibold"
+                                           TextColor="{DynamicResource TextPrimary}"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
 
-                                    <Label Text="{Binding ReadProgress, StringFormat='{0:P0} complete'}"
-                                           FontSize="12"
-                                           TextColor="{DynamicResource TextSecondary}"
-                                           HorizontalOptions="Center" />
+                                    <Button Text="Continue Reading"
+                                            FontSize="11"
+                                            Padding="8,4"
+                                            CornerRadius="8"
+                                            BackgroundColor="{DynamicResource PrimaryAccent}"
+                                            TextColor="{DynamicResource White}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ContinueReadingCommand}"
+                                            CommandParameter="{Binding .}" />
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -87,180 +195,98 @@
                                        FontSize="16"
                                        TextColor="{DynamicResource TextSecondary}"
                                        HorizontalOptions="Center" />
+                                <Button Text="Discover Books"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NavigateToDiscoverCommand}" />
                             </VerticalStackLayout>
                         </CollectionView.EmptyView>
                     </CollectionView>
                 </VerticalStackLayout>
 
-                <!-- Liked Books Section -->
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="Liked Books"
-                               FontSize="20"
-                               FontFamily="OpenSansSemibold"
-                               TextColor="{DynamicResource TextPrimary}"
-                               VerticalOptions="Center" />
-                        <Label Text="{Binding LikedBooks.Count, StringFormat='({0})'}"
-                               FontSize="16"
-                               TextColor="{DynamicResource TextSecondary}"
-                               VerticalOptions="Center" />
-                    </HorizontalStackLayout>
+                <!-- Tabs for Liked/Finished -->
+                <Grid ColumnDefinitions="*,*"
+                      ColumnSpacing="12"
+                      Margin="0,8,0,0">
+                    <Button Grid.Column="0"
+                            Text="❤️ Liked"
+                            BackgroundColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='Liked'}"
+                            TextColor="{DynamicResource White}"
+                            CornerRadius="12"
+                            Command="{Binding SelectTabCommand}"
+                            CommandParameter="Liked" />
 
-                    <CollectionView ItemsSource="{Binding LikedBooks}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical"
-                                             Span="3"
-                                             HorizontalItemSpacing="12"
-                                             VerticalItemSpacing="16" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <VerticalStackLayout Spacing="8">
-                                    <Frame Padding="0"
-                                           CornerRadius="12"
-                                           HasShadow="True"
-                                           HeightRequest="160">
-                                        <Image Source="{Binding CoverUrl}"
-                                               Aspect="AspectFill">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewBookCommand}"
-                                                                      CommandParameter="{Binding .}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                    </Frame>
+                    <Button Grid.Column="1"
+                            Text="✓ Finished"
+                            BackgroundColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='Finished'}"
+                            TextColor="{DynamicResource White}"
+                            CornerRadius="12"
+                            Command="{Binding SelectTabCommand}"
+                            CommandParameter="Finished" />
+                </Grid>
 
-                                    <Label Text="{Binding Title}"
-                                           FontSize="12"
-                                           FontFamily="OpenSansSemibold"
-                                           TextColor="{DynamicResource TextPrimary}"
-                                           LineBreakMode="TailTruncation"
-                                           MaxLines="2" />
-                                </VerticalStackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                        <CollectionView.EmptyView>
-                            <VerticalStackLayout Spacing="12"
-                                                 HorizontalOptions="Center"
-                                                 Padding="20">
-                                <Label Text="💙"
-                                       FontSize="48"
-                                       HorizontalOptions="Center" />
-                                <Label Text="No liked books yet"
-                                       FontSize="16"
-                                       TextColor="{DynamicResource TextSecondary}"
-                                       HorizontalOptions="Center" />
-                                <Label Text="Start swiping to find books you love!"
-                                       FontSize="14"
-                                       TextColor="{DynamicResource TextLight}"
-                                       HorizontalOptions="Center" />
+                <!-- Books Grid -->
+                <CollectionView ItemsSource="{Binding DisplayedBooks}"
+                                SelectionMode="None"
+                                Margin="0,8,0,0">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="3"
+                                         HorizontalItemSpacing="12"
+                                         VerticalItemSpacing="20" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <VerticalStackLayout Spacing="8">
+                                <Frame Padding="0"
+                                       CornerRadius="12"
+                                       HasShadow="True"
+                                       HeightRequest="160">
+                                    <Image Source="{Binding CoverUrl}"
+                                           Aspect="AspectFill">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewBookCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Frame>
+
+                                <Label Text="{Binding Title}"
+                                       FontSize="12"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+
+                                <HorizontalStackLayout Spacing="4"
+                                                       IsVisible="{Binding Rating, Converter={StaticResource NotNullConverter}}">
+                                    <Label Text="⭐"
+                                           FontSize="12" />
+                                    <Label Text="{Binding Rating, StringFormat='{0:F1}'}"
+                                           FontSize="11"
+                                           TextColor="{DynamicResource TextSecondary}"
+                                           VerticalOptions="Center" />
+                                </HorizontalStackLayout>
                             </VerticalStackLayout>
-                        </CollectionView.EmptyView>
-                    </CollectionView>
-                </VerticalStackLayout>
-
-                <!-- Finished Books Section -->
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="Finished Books"
-                               FontSize="20"
-                               FontFamily="OpenSansSemibold"
-                               TextColor="{DynamicResource TextPrimary}"
-                               VerticalOptions="Center" />
-                        <Label Text="{Binding FinishedBooks.Count, StringFormat='({0})'}"
-                               FontSize="16"
-                               TextColor="{DynamicResource TextSecondary}"
-                               VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-
-                    <CollectionView ItemsSource="{Binding FinishedBooks}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical"
-                                             Span="3"
-                                             HorizontalItemSpacing="12"
-                                             VerticalItemSpacing="16" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <VerticalStackLayout Spacing="8">
-                                    <Frame Padding="0"
-                                           CornerRadius="12"
-                                           HasShadow="True"
-                                           HeightRequest="160">
-                                        <Image Source="{Binding CoverUrl}"
-                                               Aspect="AspectFill">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewBookCommand}"
-                                                                      CommandParameter="{Binding .}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                    </Frame>
-
-                                    <Label Text="{Binding Title}"
-                                           FontSize="12"
-                                           FontFamily="OpenSansSemibold"
-                                           TextColor="{DynamicResource TextPrimary}"
-                                           LineBreakMode="TailTruncation"
-                                           MaxLines="2" />
-                                </VerticalStackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                        <CollectionView.EmptyView>
-                            <VerticalStackLayout Spacing="12"
-                                                 HorizontalOptions="Center"
-                                                 Padding="20">
-                                <Label Text="✓"
-                                       FontSize="48"
-                                       HorizontalOptions="Center" />
-                                <Label Text="No finished books yet"
-                                       FontSize="16"
-                                       TextColor="{DynamicResource TextSecondary}"
-                                       HorizontalOptions="Center" />
-                            </VerticalStackLayout>
-                        </CollectionView.EmptyView>
-                    </CollectionView>
-                </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Spacing="12"
+                                             HorizontalOptions="Center"
+                                             Padding="20"
+                                             Margin="0,40,0,0">
+                            <Label Text="💙"
+                                   FontSize="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="No books here yet"
+                                   FontSize="16"
+                                   TextColor="{DynamicResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
 
             </VerticalStackLayout>
         </ScrollView>
-
-        <!-- Bottom Navigation -->
-        <Grid Grid.Row="2"
-              ColumnDefinitions="*,*,*,*"
-              Padding="10,10,10,20"
-              BackgroundColor="{DynamicResource White}">
-
-            <Button Grid.Column="0"
-                    Text="🔍"
-                    FontSize="24"
-                    BackgroundColor="Transparent"
-                    TextColor="{DynamicResource TextSecondary}"
-                    Command="{Binding NavigateToDiscoverCommand}" />
-
-            <Button Grid.Column="1"
-                    Text="📚"
-                    FontSize="24"
-                    BackgroundColor="Transparent"
-                    TextColor="{DynamicResource PrimaryAccent}"
-                    Command="{Binding NavigateToLibraryCommand}" />
-
-            <Button Grid.Column="2"
-                    Text="🔎"
-                    FontSize="24"
-                    BackgroundColor="Transparent"
-                    TextColor="{DynamicResource TextSecondary}"
-                    Command="{Binding NavigateToSearchCommand}" />
-
-            <Button Grid.Column="3"
-                    Text="👤"
-                    FontSize="24"
-                    BackgroundColor="Transparent"
-                    TextColor="{DynamicResource TextSecondary}"
-                    Command="{Binding NavigateToProfileCommand}" />
-
-        </Grid>
-
-    </Grid>
+    </RefreshView>
 
 </ContentPage>

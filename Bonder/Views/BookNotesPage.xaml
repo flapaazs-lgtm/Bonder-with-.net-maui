@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.BookNotesPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Notes &amp; Reviews"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="0">
+
+        <!-- Header -->
+        <Grid Grid.Row="0"
+              Padding="20,10"
+              ColumnDefinitions="Auto,*,Auto"
+              BackgroundColor="{DynamicResource White}">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="{DynamicResource TextPrimary}"
+                    Command="{Binding BackCommand}" />
+
+            <Label Grid.Column="1"
+                   Text="{Binding Book.Title}"
+                   FontSize="18"
+                   FontFamily="OpenSansSemibold"
+                   TextColor="{DynamicResource TextPrimary}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   LineBreakMode="TailTruncation"
+                   MaxLines="1" />
+
+            <Button Grid.Column="2"
+                    Text="+"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="{DynamicResource PrimaryAccent}"
+                    Command="{Binding AddNoteCommand}" />
+        </Grid>
+
+        <!-- Tabs -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="0"
+              Padding="20,16,20,0">
+            <Button Grid.Column="0"
+                    Text="📝 Notes"
+                    BackgroundColor="Transparent"
+                    TextColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='Notes'}"
+                    FontFamily="{Binding SelectedTab, Converter={StaticResource TabFontConverter}, ConverterParameter='Notes'}"
+                    BorderWidth="0"
+                    Command="{Binding SelectTabCommand}"
+                    CommandParameter="Notes" />
+
+            <Button Grid.Column="1"
+                    Text="⭐ My Review"
+                    BackgroundColor="Transparent"
+                    TextColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='Review'}"
+                    FontFamily="{Binding SelectedTab, Converter={StaticResource TabFontConverter}, ConverterParameter='Review'}"
+                    BorderWidth="0"
+                    Command="{Binding SelectTabCommand}"
+                    CommandParameter="Review" />
+        </Grid>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="2">
+            <Grid>
+                <!-- Notes Tab -->
+                <VerticalStackLayout Spacing="16"
+                                     Padding="20"
+                                     IsVisible="{Binding IsNotesTabSelected}">
+
+                    <CollectionView ItemsSource="{Binding Notes}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="16"
+                                       BackgroundColor="{Binding Color}"
+                                       CornerRadius="16"
+                                       Margin="0,0,0,12"
+                                       HasShadow="True">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                                          RowSpacing="12">
+
+                                        <!-- Note Type & Date -->
+                                        <HorizontalStackLayout Grid.Row="0"
+                                                               Spacing="12">
+                                            <Frame Padding="8,4"
+                                                   CornerRadius="8"
+                                                   HasShadow="False"
+                                                   BackgroundColor="#FFFFFF33">
+                                                <Label Text="{Binding Type}"
+                                                       FontSize="11"
+                                                       FontFamily="OpenSansSemibold"
+                                                       TextColor="{DynamicResource White}" />
+                                            </Frame>
+
+                                            <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy}'}"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource White}"
+                                                   Opacity="0.8"
+                                                   VerticalOptions="Center" />
+
+                                            <Label Text="{Binding Page, StringFormat='Page {0}'}"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource White}"
+                                                   Opacity="0.8"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding Page, Converter={StaticResource NotNullConverter}}" />
+                                        </HorizontalStackLayout>
+
+                                        <!-- Chapter -->
+                                        <Label Grid.Row="1"
+                                               Text="{Binding Chapter}"
+                                               FontSize="14"
+                                               FontFamily="OpenSansSemibold"
+                                               TextColor="{DynamicResource White}"
+                                               IsVisible="{Binding Chapter, Converter={StaticResource NotNullConverter}}" />
+
+                                        <!-- Note Content -->
+                                        <Label Grid.Row="2"
+                                               Text="{Binding Content}"
+                                               FontSize="14"
+                                               TextColor="{DynamicResource White}"
+                                               LineBreakMode="WordWrap" />
+
+                                        <!-- Actions -->
+                                        <HorizontalStackLayout Grid.Row="3"
+                                                               Spacing="16"
+                                                               HorizontalOptions="End">
+                                            <Button Text="Edit"
+                                                    FontSize="12"
+                                                    Padding="12,6"
+                                                    CornerRadius="8"
+                                                    BackgroundColor="{DynamicResource White}"
+                                                    TextColor="{DynamicResource TextPrimary}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditNoteCommand}"
+                                                    CommandParameter="{Binding .}" />
+
+                                            <Button Text="Delete"
+                                                    FontSize="12"
+                                                    Padding="12,6"
+                                                    CornerRadius="8"
+                                                    BackgroundColor="#FF000033"
+                                                    TextColor="{DynamicResource White}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteNoteCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout Spacing="16"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center"
+                                                 Padding="40">
+                                <Label Text="📝"
+                                       FontSize="64"
+                                       HorizontalOptions="Center" />
+                                <Label Text="No notes yet"
+                                       FontSize="18"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Capture your thoughts and insights while reading"
+                                       FontSize="14"
+                                       TextColor="{DynamicResource TextSecondary}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Review Tab -->
+                <VerticalStackLayout Spacing="24"
+                                     Padding="20"
+                                     IsVisible="{Binding IsReviewTabSelected}">
+
+                    <!-- Review Form -->
+                    <VerticalStackLayout Spacing="20">
+                        <!-- Rating -->
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Your Rating"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource TextPrimary}" />
+
+                            <HorizontalStackLayout Spacing="8"
+                                                   HorizontalOptions="Center">
+                                <Label Text="⭐"
+                                       FontSize="32">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetRatingCommand}"
+                                                              CommandParameter="1" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="⭐"
+                                       FontSize="32"
+                                       Opacity="{Binding Rating, Converter={StaticResource RatingOpacityConverter}, ConverterParameter=2}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetRatingCommand}"
+                                                              CommandParameter="2" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="⭐"
+                                       FontSize="32"
+                                       Opacity="{Binding Rating, Converter={StaticResource RatingOpacityConverter}, ConverterParameter=3}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetRatingCommand}"
+                                                              CommandParameter="3" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="⭐"
+                                       FontSize="32"
+                                       Opacity="{Binding Rating, Converter={StaticResource RatingOpacityConverter}, ConverterParameter=4}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetRatingCommand}"
+                                                              CommandParameter="4" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="⭐"
+                                       FontSize="32"
+                                       Opacity="{Binding Rating, Converter={StaticResource RatingOpacityConverter}, ConverterParameter=5}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetRatingCommand}"
+                                                              CommandParameter="5" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+                        <!-- Review Title -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Review Title"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Entry Text="{Binding ReviewTitle}"
+                                   Placeholder="Sum up your review in one line"
+                                   BackgroundColor="{DynamicResource White}"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                        </VerticalStackLayout>
+
+                        <!-- Review Content -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Your Review"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Editor Text="{Binding ReviewContent}"
+                                    Placeholder="Share your thoughts about this book..."
+                                    BackgroundColor="{DynamicResource White}"
+                                    TextColor="{DynamicResource TextPrimary}"
+                                    HeightRequest="200"
+                                    AutoSize="TextChanges" />
+                        </VerticalStackLayout>
+
+                        <!-- Spoiler Warning -->
+                        <HorizontalStackLayout Spacing="12">
+                            <CheckBox IsChecked="{Binding IsSpoiler}"
+                                      Color="{DynamicResource PrimaryAccent}" />
+                            <Label Text="This review contains spoilers"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextSecondary}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <!-- Save Button -->
+                        <Button Text="Save Review"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveReviewCommand}"
+                                Margin="0,20,0,0" />
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+
+        <!-- Quick Add Note Button (Floating) -->
+        <Button Grid.Row="3"
+                Text="+ Quick Note"
+                Style="{StaticResource PrimaryButton}"
+                Command="{Binding QuickNoteCommand}"
+                Margin="20,0,20,20"
+                IsVisible="{Binding IsNotesTabSelected}" />
+
+    </Grid>
+
+</ContentPage>

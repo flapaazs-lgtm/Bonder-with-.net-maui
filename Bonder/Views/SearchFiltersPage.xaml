@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.SearchFiltersPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Filters"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0">
+
+        <!-- Header -->
+        <Grid Grid.Row="0"
+              Padding="20"
+              ColumnDefinitions="Auto,*,Auto"
+              BackgroundColor="{DynamicResource White}">
+            <Button Grid.Column="0"
+                    Text="Clear All"
+                    FontSize="14"
+                    BackgroundColor="Transparent"
+                    TextColor="{DynamicResource TextSecondary}"
+                    Command="{Binding ClearFiltersCommand}" />
+
+            <Label Grid.Column="1"
+                   Text="Filters"
+                   FontSize="18"
+                   FontFamily="OpenSansSemibold"
+                   TextColor="{DynamicResource TextPrimary}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+
+            <Button Grid.Column="2"
+                    Text="×"
+                    FontSize="28"
+                    BackgroundColor="Transparent"
+                    TextColor="{DynamicResource TextPrimary}"
+                    Command="{Binding CloseCommand}" />
+        </Grid>
+
+        <!-- Filters Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="24"
+                                 Padding="20">
+
+                <!-- Genres -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Genres"
+                           FontSize="16"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <FlexLayout Wrap="Wrap"
+                                JustifyContent="Start"
+                                BindableLayout.ItemsSource="{Binding AvailableGenres}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Button Text="{Binding Name}"
+                                        Margin="0,0,8,8"
+                                        Padding="16,8"
+                                        CornerRadius="16"
+                                        BackgroundColor="{Binding IsSelected, Converter={StaticResource GenreSelectionConverter}}"
+                                        TextColor="{Binding IsSelected, Converter={StaticResource GenreTextColorConverter}}"
+                                        BorderColor="{DynamicResource PrimaryAccent}"
+                                        BorderWidth="1"
+                                        FontSize="13"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleGenreCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+
+                <!-- Rating Range -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Minimum Rating"
+                           FontSize="16"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="12">
+                        <Slider Grid.Column="0"
+                                Minimum="0"
+                                Maximum="5"
+                                Value="{Binding MinRating}"
+                                MinimumTrackColor="{DynamicResource PrimaryAccent}"
+                                MaximumTrackColor="{DynamicResource SecondaryBackground}"
+                                ThumbColor="{DynamicResource PrimaryAccent}" />
+
+                        <Label Grid.Column="1"
+                               Text="{Binding MinRating, StringFormat='{0:F1}★'}"
+                               FontSize="16"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource PrimaryAccent}"
+                               VerticalOptions="Center"
+                               WidthRequest="60"
+                               HorizontalTextAlignment="End" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Publication Year Range -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Publication Year"
+                           FontSize="16"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <Grid ColumnDefinitions="*,Auto,*"
+                          ColumnSpacing="12">
+                        <Entry Grid.Column="0"
+                               Placeholder="From"
+                               Text="{Binding MinYear}"
+                               Keyboard="Numeric"
+                               BackgroundColor="{DynamicResource White}" />
+
+                        <Label Grid.Column="1"
+                               Text="—"
+                               FontSize="16"
+                               VerticalOptions="Center" />
+
+                        <Entry Grid.Column="2"
+                               Placeholder="To"
+                               Text="{Binding MaxYear}"
+                               Keyboard="Numeric"
+                               BackgroundColor="{DynamicResource White}" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Page Count Range -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Page Count"
+                           FontSize="16"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <Grid ColumnDefinitions="*,Auto,*"
+                          ColumnSpacing="12">
+                        <Entry Grid.Column="0"
+                               Placeholder="Min"
+                               Text="{Binding MinPages}"
+                               Keyboard="Numeric"
+                               BackgroundColor="{DynamicResource White}" />
+
+                        <Label Grid.Column="1"
+                               Text="—"
+                               FontSize="16"
+                               VerticalOptions="Center" />
+
+                        <Entry Grid.Column="2"
+                               Placeholder="Max"
+                               Text="{Binding MaxPages}"
+                               Keyboard="Numeric"
+                               BackgroundColor="{DynamicResource White}" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Sort By -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Sort By"
+                           FontSize="16"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <CollectionView ItemsSource="{Binding SortOptions}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedSortOption}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="16"
+                                       Margin="0,0,0,8"
+                                       BackgroundColor="{Binding IsSelected, Converter={StaticResource SelectedBackgroundConverter}}"
+                                       BorderColor="{Binding IsSelected, Converter={StaticResource SelectedBorderConverter}}"
+                                       CornerRadius="12"
+                                       HasShadow="False">
+                                    <HorizontalStackLayout Spacing="12">
+                                        <Label Text="{Binding Icon}"
+                                               FontSize="20"
+                                               VerticalOptions="Center" />
+                                        <Label Text="{Binding Name}"
+                                               FontSize="14"
+                                               TextColor="{DynamicResource TextPrimary}"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectSortCommand}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Language -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Language"
+                           FontSize="16"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{DynamicResource TextPrimary}" />
+
+                    <Picker ItemsSource="{Binding AvailableLanguages}"
+                            SelectedItem="{Binding SelectedLanguage}"
+                            Title="Select Language"
+                            BackgroundColor="{DynamicResource White}"
+                            TextColor="{DynamicResource TextPrimary}" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Apply Button -->
+        <Grid Grid.Row="2"
+              Padding="20"
+              BackgroundColor="{DynamicResource White}">
+            <Button Text="Apply Filters"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding ApplyFiltersCommand}" />
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

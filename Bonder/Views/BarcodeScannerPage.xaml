@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.BarcodeScannerPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             Title="Scan Book"
+             BackgroundColor="Black">
+
+    <Grid RowDefinitions="*,Auto"
+          RowSpacing="0">
+
+        <!-- Camera View -->
+        <zxing:CameraBarcodeReaderView x:Name="CameraView"
+                                       Grid.Row="0"
+                                       BarcodesDetected="OnBarcodesDetected"
+                                       IsDetecting="True">
+            <zxing:CameraBarcodeReaderView.BarCodeOptions>
+                <zxing:BarcodeReaderOptions Formats="Ean13,Ean8,Ean8,Ean13"
+                                            TryHarder="True"
+                                            TryInverted="True" />
+            </zxing:CameraBarcodeReaderView.BarCodeOptions>
+        </zxing:CameraBarcodeReaderView>
+
+        <!-- Scanner Overlay -->
+        <Grid Grid.Row="0">
+            <BoxView BackgroundColor="Black"
+                     Opacity="0.5" />
+
+            <Frame WidthRequest="280"
+                   HeightRequest="200"
+                   BorderColor="White"
+                   BackgroundColor="Transparent"
+                   CornerRadius="20"
+                   HasShadow="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center">
+                <Grid>
+                    <!-- Corner Markers -->
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="40"
+                             HeightRequest="4"
+                             HorizontalOptions="Start"
+                             VerticalOptions="Start" />
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="4"
+                             HeightRequest="40"
+                             HorizontalOptions="Start"
+                             VerticalOptions="Start" />
+
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="40"
+                             HeightRequest="4"
+                             HorizontalOptions="End"
+                             VerticalOptions="Start" />
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="4"
+                             HeightRequest="40"
+                             HorizontalOptions="End"
+                             VerticalOptions="Start" />
+
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="40"
+                             HeightRequest="4"
+                             HorizontalOptions="Start"
+                             VerticalOptions="End" />
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="4"
+                             HeightRequest="40"
+                             HorizontalOptions="Start"
+                             VerticalOptions="End" />
+
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="40"
+                             HeightRequest="4"
+                             HorizontalOptions="End"
+                             VerticalOptions="End" />
+                    <BoxView BackgroundColor="White"
+                             WidthRequest="4"
+                             HeightRequest="40"
+                             HorizontalOptions="End"
+                             VerticalOptions="End" />
+                </Grid>
+            </Frame>
+        </Grid>
+
+        <!-- Instructions -->
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="20"
+                             Spacing="16"
+                             BackgroundColor="#000000CC">
+
+            <Label Text="Position the barcode within the frame"
+                   FontSize="16"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <HorizontalStackLayout Spacing="12"
+                                   HorizontalOptions="Center">
+                <Button Text="Cancel"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding CancelCommand}"
+                        WidthRequest="140" />
+
+                <Button Text="Manual Entry"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding ManualEntryCommand}"
+                        WidthRequest="140" />
+            </HorizontalStackLayout>
+
+            <Label Text="Tip: Make sure the barcode is well-lit and in focus"
+                   FontSize="12"
+                   TextColor="#FFFFFF88"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>
