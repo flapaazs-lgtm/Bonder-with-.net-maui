@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Bonder.Views.TopBooksSelectionPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Top Books"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="0"
+          Padding="20">
+
+        <!-- Progress Dots -->
+        <HorizontalStackLayout Grid.Row="0"
+                               Spacing="8"
+                               HorizontalOptions="Center"
+                               Margin="0,20,0,0">
+            <BoxView Color="{DynamicResource PrimaryAccent}"
+                     HeightRequest="8"
+                     WidthRequest="8"
+                     CornerRadius="4" />
+            <BoxView Color="{DynamicResource PrimaryAccent}"
+                     HeightRequest="8"
+                     WidthRequest="8"
+                     CornerRadius="4" />
+            <BoxView Color="{DynamicResource PrimaryAccent}"
+                     HeightRequest="8"
+                     WidthRequest="8"
+                     CornerRadius="4" />
+        </HorizontalStackLayout>
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="1"
+                             Spacing="16"
+                             Margin="0,24,0,20">
+            <Label Text="Find your next favorite read"
+                   FontSize="24"
+                   FontFamily="OpenSansSemibold"
+                   TextColor="{DynamicResource TextPrimary}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <Label Text="{Binding SelectionStatusText}"
+                   FontSize="16"
+                   TextColor="{DynamicResource TextSecondary}"
+                   HorizontalOptions="Center" />
+
+            <!-- Search Bar -->
+            <SearchBar Placeholder="Search for a book or author..."
+                       Text="{Binding SearchQuery}"
+                       SearchCommand="{Binding SearchCommand}"
+                       BackgroundColor="{DynamicResource White}"
+                       TextColor="{DynamicResource TextPrimary}"
+                       PlaceholderColor="{DynamicResource TextLight}" />
+        </VerticalStackLayout>
+
+        <!-- Books Grid -->
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Spacing="12">
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   Color="{DynamicResource PrimaryAccent}"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center" />
+
+                <!-- Books Collection -->
+                <CollectionView ItemsSource="{Binding Books}"
+                                SelectionMode="None"
+                                IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="12"
+                                         VerticalItemSpacing="16" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid RowDefinitions="200,Auto,Auto"
+                                  RowSpacing="8">
+                                <Frame Grid.Row="0"
+                                       Padding="0"
+                                       CornerRadius="12"
+                                       HasShadow="True"
+                                       BorderColor="{Binding IsSelected, Converter={StaticResource SelectedBookBorderConverter}}"
+                                       BackgroundColor="{DynamicResource White}">
+                                    <Grid>
+                                        <Image Source="{Binding CoverUrl}"
+                                               Aspect="AspectFill"
+                                               HeightRequest="200">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleBookCommand}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+
+                                        <!-- Selection Checkmark -->
+                                        <Frame BackgroundColor="{DynamicResource PrimaryAccent}"
+                                               CornerRadius="15"
+                                               Padding="6"
+                                               HeightRequest="30"
+                                               WidthRequest="30"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Start"
+                                               Margin="8"
+                                               IsVisible="{Binding IsSelected}">
+                                            <Label Text="✓"
+                                                   TextColor="{DynamicResource White}"
+                                                   FontSize="16"
+                                                   FontFamily="OpenSansSemibold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </Frame>
+                                    </Grid>
+                                </Frame>
+
+                                <Label Grid.Row="1"
+                                       Text="{Binding Title}"
+                                       FontSize="14"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+
+                                <Label Grid.Row="2"
+                                       Text="{Binding AuthorsDisplay}"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource TextSecondary}"
+                                       LineBreakMode="TailTruncation" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Continue Button -->
+        <Button Grid.Row="3"
+                Text="Continue"
+                Style="{StaticResource PrimaryButton}"
+                Command="{Binding ContinueCommand}"
+                IsEnabled="{Binding CanContinue}"
+                Margin="0,20,0,20" />
+    </Grid>
+
+</ContentPage>

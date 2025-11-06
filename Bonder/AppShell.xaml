@@ -7,6 +7,7 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
+    <!-- Onboarding Flow -->
     <ShellContent
         Title="SignIn"
         ContentTemplate="{DataTemplate views:SignInPage}"
@@ -18,8 +19,41 @@
         Route="GenreSelection" />
 
     <ShellContent
-        Title="MainPage"
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
+        Title="TopBooksSelection"
+        ContentTemplate="{DataTemplate views:TopBooksSelectionPage}"
+        Route="TopBooksSelection" />
+
+    <!-- Main App Tabs -->
+    <TabBar Route="Main">
+        <ShellContent
+            Title="Discover"
+            ContentTemplate="{DataTemplate views:SwipeDiscoveryPage}"
+            Route="SwipeDiscovery"
+            Icon="🔍" />
+
+        <ShellContent
+            Title="Library"
+            ContentTemplate="{DataTemplate views:LibraryPage}"
+            Route="Library"
+            Icon="📚" />
+
+        <ShellContent
+            Title="Search"
+            ContentTemplate="{DataTemplate views:SearchPage}"
+            Route="Search"
+            Icon="🔎" />
+
+        <ShellContent
+            Title="Profile"
+            ContentTemplate="{DataTemplate views:ProfilePage}"
+            Route="Profile"
+            Icon="👤" />
+    </TabBar>
+
+    <!-- Detail Pages -->
+    <ShellContent
+        Title="BookDetails"
+        ContentTemplate="{DataTemplate views:BookDetailsPage}"
+        Route="BookDetails" />
 
 </Shell>

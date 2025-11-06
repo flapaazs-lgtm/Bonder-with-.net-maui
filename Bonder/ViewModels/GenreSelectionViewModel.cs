@@ -1,16 +1,17 @@
 ﻿using Bonder.Models;
+using Bonder.Services;
 using System.Collections.ObjectModel;
 
 namespace Bonder.ViewModels;
 
 public class GenreSelectionViewModel : BaseViewModel
 {
+    private readonly IStorageService _storageService;
     private readonly ObservableCollection<Genre> _allGenres;
     private readonly ObservableCollection<Genre> _selectedGenres = new();
     private bool _canContinue = false;
 
     public ObservableCollection<Genre> AllGenres => _allGenres;
-
     public ObservableCollection<Genre> SelectedGenres => _selectedGenres;
 
     public bool CanContinue
@@ -23,9 +24,10 @@ public class GenreSelectionViewModel : BaseViewModel
     public Command ContinueCommand { get; }
     public Command SkipCommand { get; }
 
-    public GenreSelectionViewModel()
+    public GenreSelectionViewModel(IStorageService storageService)
     {
-        // Initialize genres
+        _storageService = storageService;
+
         _allGenres = new ObservableCollection<Genre>
         {
             new Genre { Id = "fantasy", Name = "Fantasy", DisplayName = "Fantasy", IsSelected = false },
@@ -36,10 +38,10 @@ public class GenreSelectionViewModel : BaseViewModel
             new Genre { Id = "biography", Name = "Biography", DisplayName = "Biography", IsSelected = false },
             new Genre { Id = "history", Name = "History", DisplayName = "History", IsSelected = false },
             new Genre { Id = "young_adult", Name = "Young Adult", DisplayName = "Young Adult", IsSelected = false },
-            new Genre { Id = "children", Name = "Children", DisplayName = "Children", IsSelected = false },
             new Genre { Id = "nonfiction", Name = "Non-Fiction", DisplayName = "Non-Fiction", IsSelected = false },
             new Genre { Id = "horror", Name = "Horror", DisplayName = "Horror", IsSelected = false },
-            new Genre { Id = "comedy", Name = "Comedy", DisplayName = "Comedy", IsSelected = false }
+            new Genre { Id = "poetry", Name = "Poetry", DisplayName = "Poetry", IsSelected = false },
+            new Genre { Id = "self_help", Name = "Self Help", DisplayName = "Self Help", IsSelected = false }
         };
 
         ToggleGenreCommand = new Command<Genre>(ToggleGenre);
@@ -63,7 +65,7 @@ public class GenreSelectionViewModel : BaseViewModel
             _selectedGenres.Remove(genre);
         }
 
-        // Update the genre in the collection to refresh UI
+        // Force UI update
         var index = _allGenres.IndexOf(genre);
         if (index >= 0)
         {
@@ -76,13 +78,19 @@ public class GenreSelectionViewModel : BaseViewModel
 
     private async Task ContinueAsync()
     {
-        // TODO: Save selected genres and navigate to main page
-        await Shell.Current.GoToAsync("//MainPage");
+        var preferences = await _storageService.LoadUserPreferencesAsync();
+        preferences.GenreWeights = _selectedGenres.ToDictionary(
+            g => g.Name.ToLower(),
+            g => 1.0
+        );
+        await _storageService.SaveUserPreferencesAsync(preferences);
+
+        var selectedGenreIds = string.Join(",", _selectedGenres.Select(g => g.Id));
+        await Shell.Current.GoToAsync($"//TopBooksSelection?genres={selectedGenreIds}");
     }
 
     private async Task SkipAsync()
     {
-        // Navigate to main page without selecting genres
-        await Shell.Current.GoToAsync("//MainPage");
+        await Shell.Current.GoToAsync("//SwipeDiscovery");
     }
 }

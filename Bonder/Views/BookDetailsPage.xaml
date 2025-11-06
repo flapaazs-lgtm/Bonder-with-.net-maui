@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8" ?>
+    <ContentPage x:Class="Bonder.Views.BookDetailsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Book Details"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+        <Grid RowDefinitions="Auto,*"
+          RowSpacing="0">
+
+            <!-- Header with Back Button -->
+            <Grid Grid.Row="0"
+              Padding="10"
+              ColumnDefinitions="Auto,*,Auto,Auto"
+              BackgroundColor="{DynamicResource White}">
+                <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="{DynamicResource TextPrimary}"
+                    Command="{Binding BackCommand}" />
+
+                <Button Grid.Column="2"
+                    Text="🔖"
+                    FontSize="20"
+                    BackgroundColor="Transparent"
+                    Command="{Binding BookmarkCommand}" />
+
+                <Button Grid.Column="3"
+                    Text="🔗"
+                    FontSize="20"
+                    BackgroundColor="Transparent"
+                    Command="{Binding ShareCommand}" />
+            </Grid>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Spacing="0">
+
+                    <!-- Hero Section -->
+                    <Grid Padding="20"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="120,*"
+                      ColumnSpacing="20"
+                      BackgroundColor="{DynamicResource White}">
+
+                        <!-- Book Cover -->
+                        <Frame Grid.Row="0"
+                           Grid.RowSpan="3"
+                           Grid.Column="0"
+                           Padding="0"
+                           CornerRadius="12"
+                           HasShadow="True"
+                           HeightRequest="180"
+                           WidthRequest="120">
+                            <Image Source="{Binding Book.CoverUrl}"
+                               Aspect="AspectFill" />
+                        </Frame>
+
+                        <!-- Title & Author -->
+                        <VerticalStackLayout Grid.Row="0"
+                                         Grid.Column="1"
+                                         Spacing="8"
+                                         VerticalOptions="Start">
+                            <Label Text="{Binding Book.Title}"
+                               FontSize="20"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource TextPrimary}"
+                               LineBreakMode="WordWrap"
+                               MaxLines="3" />
+
+                            <Label Text="{Binding Book.AuthorsDisplay}"
+                               FontSize="16"
+                               TextColor="{DynamicResource TextSecondary}" />
+
+                            <!-- Rating -->
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="⭐"
+                                   FontSize="16" />
+                                <Label Text="{Binding Book.Rating, StringFormat='{0:F1}'}"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextSecondary}"
+                                   VerticalOptions="Center" />
+                                <Label Text="{Binding Book.RatingCount, StringFormat='({0:N0} ratings)'}"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource TextLight}"
+                                   VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+                        <!-- Genre Tags -->
+                        <FlexLayout Grid.Row="1"
+            Grid.Column="1"
+            Wrap="Wrap"
+            JustifyContent="Start"
+            BindableLayout.ItemsSource="{Binding Book.Genres}"
+            Margin="0,12,0,0">
+    <BindableLayout.ItemTemplate>
+        <DataTemplate>
+            <Frame BackgroundColor="{DynamicResource PrimaryAccent}"
+                   CornerRadius="12"
+                   Padding="10,5"
+                   Margin="0,0,6,6"
+                   HasShadow="False">
+                <Label Text="{Binding .}"
+                       FontSize="12"
+                       TextColor="{DynamicResource White}"
+                       FontFamily="OpenSansSemibold" />
+            </Frame>
+        </DataTemplate>
+    </BindableLayout.ItemTemplate>
+</FlexLayout>
+
+                    </Grid>
+
+                    <!-- Tabs Section -->
+                    <Grid Padding="20,20,20,0"
+                      ColumnDefinitions="*,*,*"
+                      ColumnSpacing="0">
+                        <Button Grid.Column="0"
+                            Text="About"
+                            BackgroundColor="Transparent"
+                            TextColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='About'}"
+                            FontFamily="{Binding SelectedTab, Converter={StaticResource TabFontConverter}, ConverterParameter='About'}"
+                            Command="{Binding SelectTabCommand}"
+                            CommandParameter="About" />
+
+                        <Button Grid.Column="1"
+                            Text="Reviews"
+                            BackgroundColor="Transparent"
+                            TextColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='Reviews'}"
+                            FontFamily="{Binding SelectedTab, Converter={StaticResource TabFontConverter}, ConverterParameter='Reviews'}"
+                            Command="{Binding SelectTabCommand}"
+                            CommandParameter="Reviews" />
+
+                        <Button Grid.Column="2"
+                            Text="Similar"
+                            BackgroundColor="Transparent"
+                            TextColor="{Binding SelectedTab, Converter={StaticResource TabColorConverter}, ConverterParameter='Similar'}"
+                            FontFamily="{Binding SelectedTab, Converter={StaticResource TabFontConverter}, ConverterParameter='Similar'}"
+                            Command="{Binding SelectTabCommand}"
+                            CommandParameter="Similar" />
+                    </Grid>
+
+                    <!-- Tab Content -->
+                    <VerticalStackLayout Padding="20"
+                                     Spacing="20">
+
+                        <!-- About Tab -->
+                        <VerticalStackLayout Spacing="16"
+                                         IsVisible="{Binding IsAboutTabSelected}">
+                            <Label Text="Description"
+                               FontSize="18"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource TextPrimary}" />
+
+                            <Label Text="{Binding Book.Description}"
+                               FontSize="14"
+                               TextColor="{DynamicResource TextSecondary}"
+                               LineBreakMode="WordWrap" />
+
+                            <Label Text="Information"
+                               FontSize="18"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource TextPrimary}"
+                               Margin="0,16,0,0" />
+
+                            <Grid ColumnDefinitions="Auto,*"
+                              RowDefinitions="Auto,Auto,Auto,Auto"
+                              RowSpacing="12"
+                              ColumnSpacing="16">
+
+                                <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Publisher"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextLight}" />
+                                <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding Book.Publisher}"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextPrimary}" />
+
+                                <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Published"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextLight}" />
+                                <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding Book.PublishedDate}"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextPrimary}" />
+
+                                <Label Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Pages"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextLight}" />
+                                <Label Grid.Row="2"
+                                   Grid.Column="1"
+                                   Text="{Binding Book.PageCount}"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextPrimary}" />
+
+                                <Label Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="ISBN"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextLight}" />
+                                <Label Grid.Row="3"
+                                   Grid.Column="1"
+                                   Text="{Binding Book.ISBN}"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <!-- Reviews Tab -->
+                        <VerticalStackLayout Spacing="16"
+                                         IsVisible="{Binding IsReviewsTabSelected}">
+                            <Label Text="Reviews"
+                               FontSize="18"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource TextPrimary}" />
+
+                            <Label Text="User reviews coming soon!"
+                               FontSize="14"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center"
+                               Margin="0,40,0,40" />
+                        </VerticalStackLayout>
+
+                        <!-- Similar Books Tab -->
+                        <VerticalStackLayout Spacing="16"
+                                         IsVisible="{Binding IsSimilarTabSelected}">
+                            <Label Text="Similar Books"
+                               FontSize="18"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource TextPrimary}" />
+
+                            <CollectionView ItemsSource="{Binding SimilarBooks}"
+                                        SelectionMode="None">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal"
+                                                   ItemSpacing="12" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <VerticalStackLayout Spacing="8"
+                                                         WidthRequest="120">
+                                            <Frame Padding="0"
+                                               CornerRadius="12"
+                                               HasShadow="True"
+                                               HeightRequest="180"
+                                               WidthRequest="120">
+                                                <Image Source="{Binding CoverUrl}"
+                                                   Aspect="AspectFill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewSimilarBookCommand}"
+                                                                          CommandParameter="{Binding .}" />
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Frame>
+
+                                            <Label Text="{Binding Title}"
+                                               FontSize="12"
+                                               TextColor="{DynamicResource TextPrimary}"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Bottom Action Buttons -->
+            <Grid Grid.Row="1"
+              VerticalOptions="End"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="12"
+              Padding="20"
+              BackgroundColor="{DynamicResource PrimaryBackground}">
+
+                <Button Grid.Column="0"
+                    Text="Buy on Amazon"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding BuyOnAmazonCommand}" />
+
+                <Button Grid.Column="1"
+                    Text="Find on Bookshop"
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding FindOnBookshopCommand}" />
+
+            </Grid>
+
+        </Grid>
+
+    </ContentPage>

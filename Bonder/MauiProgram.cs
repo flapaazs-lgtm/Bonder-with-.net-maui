@@ -20,20 +20,34 @@ public static class MauiProgram
 
         // Register Services
         builder.Services.AddSingleton<IBookService, OpenLibraryService>();
+        builder.Services.AddSingleton<IStorageService, StorageService>();
+        builder.Services.AddSingleton<IRecommendationService, RecommendationService>();
 
         // Register ViewModels
         builder.Services.AddTransient<SignInViewModel>();
         builder.Services.AddTransient<GenreSelectionViewModel>();
+        builder.Services.AddTransient<TopBooksSelectionViewModel>();
+        builder.Services.AddTransient<SwipeDiscoveryViewModel>();
+        builder.Services.AddTransient<BookDetailsViewModel>();
+        builder.Services.AddTransient<LibraryViewModel>();
         builder.Services.AddTransient<MainViewModel>();
 
-        // Register Views - FIXED TYPO HERE
+        // Register Views
         builder.Services.AddTransient<SignInPage>();
         builder.Services.AddTransient<GenreSelectionPage>();
+        builder.Services.AddTransient<TopBooksSelectionPage>();
+        builder.Services.AddTransient<SwipeDiscoveryPage>();
+        builder.Services.AddTransient<BookDetailsPage>();
+        builder.Services.AddTransient<LibraryPage>();
         builder.Services.AddTransient<MainPage>();
 
         // Register Converters
         builder.Services.AddSingleton<GenreSelectionConverter>();
         builder.Services.AddSingleton<GenreTextColorConverter>();
+        builder.Services.AddSingleton<InverseBoolConverter>();
+        builder.Services.AddSingleton<SelectedBookBorderConverter>();
+        builder.Services.AddSingleton<TabColorConverter>();
+        builder.Services.AddSingleton<TabFontConverter>();
 
         return builder.Build();
     }

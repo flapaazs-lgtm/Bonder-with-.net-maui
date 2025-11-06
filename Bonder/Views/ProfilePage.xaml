@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bonder.Views.ProfilePage"
+             Title="Profile"
+             BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24"
+                             Padding="20">
+
+            <!-- Profile Header -->
+            <VerticalStackLayout Spacing="16"
+                                 HorizontalOptions="Center"
+                                 Margin="0,40,0,20">
+                <Frame CornerRadius="50"
+                       Padding="0"
+                       HeightRequest="100"
+                       WidthRequest="100"
+                       HorizontalOptions="Center"
+                       HasShadow="True"
+                       BackgroundColor="{DynamicResource PrimaryAccent}">
+                    <Label Text="👤"
+                           FontSize="48"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Frame>
+
+                <Label Text="Book Lover"
+                       FontSize="24"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="{DynamicResource TextPrimary}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Avid reader • 127 books read"
+                       FontSize="14"
+                       TextColor="{DynamicResource TextSecondary}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- Stats Grid -->
+            <Grid ColumnDefinitions="*,*,*"
+                  ColumnSpacing="12"
+                  RowSpacing="12">
+
+                <Frame Grid.Column="0"
+                       Padding="20"
+                       BackgroundColor="{DynamicResource White}">
+                    <VerticalStackLayout Spacing="8"
+                                         HorizontalOptions="Center">
+                        <Label Text="42"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource PrimaryAccent}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Reading"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Grid.Column="1"
+                       Padding="20"
+                       BackgroundColor="{DynamicResource White}">
+                    <VerticalStackLayout Spacing="8"
+                                         HorizontalOptions="Center">
+                        <Label Text="156"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource Success}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Finished"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Border Grid.Column="2"
+                       Padding="20"
+                       BackgroundColor="{DynamicResource White}">
+                    <VerticalStackLayout Spacing="8"
+                                         HorizontalOptions="Center">
+                        <Label Text="89"
+                               FontSize="28"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{DynamicResource PrimaryAccent}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Saved"
+                               FontSize="12"
+                               TextColor="{DynamicResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Settings Section -->
+            <VerticalStackLayout Spacing="0"
+                                 Margin="0,20,0,0">
+                <Label Text="Settings"
+                       FontSize="20"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="{DynamicResource TextPrimary}"
+                       Margin="0,0,0,16" />
+
+                <Border Padding="0"
+                       BackgroundColor="{DynamicResource White}">
+                    <VerticalStackLayout Spacing="0">
+                        <Button Text="Edit Profile"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextPrimary}"
+                                HorizontalOptions="Start"
+                                Padding="20,16" />
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource SecondaryBackground}" />
+
+                        <Button Text="Notifications"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextPrimary}"
+                                HorizontalOptions="Start"
+                                Padding="20,16" />
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource SecondaryBackground}" />
+
+                        <Button Text="Privacy Security"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextPrimary}"
+                                HorizontalOptions="Start"
+                                Padding="20,16" />
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource SecondaryBackground}" />
+
+                        <Button Text="Help Support"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextPrimary}"
+                                HorizontalOptions="Start"
+                                Padding="20,16" />
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource SecondaryBackground}" />
+
+                        <Button Text="About"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextPrimary}"
+                                HorizontalOptions="Start"
+                                Padding="20,16" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Logout Button -->
+            <Button Text="Log Out"
+                    Style="{StaticResource SecondaryButton}"
+                    TextColor="{DynamicResource Danger}"
+                    Margin="0,20,0,40" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

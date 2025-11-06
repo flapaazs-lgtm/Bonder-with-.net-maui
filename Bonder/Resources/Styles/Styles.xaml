@@ -2,8 +2,18 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Bonder.Converters">
 
+    <!-- Converters -->
+    <converters:GenreSelectionConverter x:Key="GenreSelectionConverter" />
+    <converters:GenreTextColorConverter x:Key="GenreTextColorConverter" />
+    <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+    <converters:SelectedBookBorderConverter x:Key="SelectedBookBorderConverter" />
+    <converters:TabColorConverter x:Key="TabColorConverter" />
+    <converters:TabFontConverter x:Key="TabFontConverter" />
+
+    <!-- Base Styles -->
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
@@ -38,6 +48,20 @@
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Margin" Value="0,0,0,16" />
+    </Style>
+
+    <Style TargetType="SearchBar">
+        <Setter Property="BackgroundColor" Value="{DynamicResource White}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource TextLight}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
+    <Style TargetType="Frame">
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="12" />
     </Style>
 
 </ResourceDictionary>
